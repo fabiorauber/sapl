@@ -352,15 +352,23 @@ class MateriaLegislativa(models.Model):
 
 @reversion.register()
 class Autoria(models.Model):
-    autor = models.ForeignKey(Autor,
-                              verbose_name=_('Autor'),
-                              on_delete=models.PROTECT)
+    autor = models.ForeignKey(
+        Autor,
+        verbose_name=_('Autor'),
+        on_delete=models.PROTECT
+    )
+
     materia = models.ForeignKey(
-        MateriaLegislativa, on_delete=models.CASCADE,
-        verbose_name=_('Matéria Legislativa'))
-    primeiro_autor = models.BooleanField(verbose_name=_('Primeiro Autor'),
-                                         choices=YES_NO_CHOICES,
-                                         default=False)
+        MateriaLegislativa,
+        on_delete=models.CASCADE,
+        verbose_name=_('Matéria Legislativa')
+    )
+
+    primeiro_autor = models.BooleanField(
+        verbose_name=_('Primeiro Autor'),
+        choices=YES_NO_CHOICES,
+        default=False
+    )
 
     class Meta:
         verbose_name = _('Autoria')

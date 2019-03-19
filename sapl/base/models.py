@@ -215,44 +215,65 @@ class TipoAutor(models.Model):
 
 @reversion.register()
 class Autor(models.Model):
+    user = models.OneToOneField(
+        get_settings_auth_user_model(),
+        on_delete=models.SET_NULL,
+        null=True
+    )
 
-    user = models.OneToOneField(get_settings_auth_user_model(),
-                                on_delete=models.SET_NULL,
-                                null=True)
-
-    tipo = models.ForeignKey(TipoAutor, verbose_name=_('Tipo do Autor'),
-                             on_delete=models.PROTECT)
+    tipo = models.ForeignKey(
+        TipoAutor,
+        verbose_name=_('Tipo do Autor'),
+        on_delete=models.PROTECT
+    )
 
     content_type = models.ForeignKey(
         ContentType,
-        blank=True, null=True, default=None)
+        blank=True,
+        null=True,
+        default=None
+    )
+
     object_id = models.PositiveIntegerField(
-        blank=True, null=True, default=None)
-    autor_related = GenericForeignKey('content_type', 'object_id')
+        blank=True,
+        null=True,
+        default=None
+    )
+
+    autor_related = GenericForeignKey(
+        'content_type',
+        'object_id'
+    )
 
     nome = models.CharField(
-        max_length=120, blank=True, verbose_name=_('Nome do Autor'))
+        max_length=120,
+        blank=True,
+        verbose_name=_('Nome do Autor')
+    )
 
-    cargo = models.CharField(max_length=50, blank=True)
+    cargo = models.CharField(
+        max_length=50,
+        blank=True
+    )
 
     class Meta:
         verbose_name = _('Autor')
         verbose_name_plural = _('Autores')
         unique_together = (('content_type', 'object_id'), )
-        ordering = ('nome',)
+        ordering = ('nome', )
 
     def __str__(self):
         if self.autor_related:
             return str(self.autor_related)
-        else:
-            if self.nome:
-                if self.cargo:
-                    return '{} - {}'.format(self.nome, self.cargo)
-                else:
-                    return str(self.nome)
-        if self.user:
+        elif self.nome:
+            if self.cargo:
+                return '{} - {}'.format(self.nome, self.cargo)
+            else:
+                return str(self.nome)
+        elif self.user:
             return str(self.user.username)
-        return '?'
+        else:
+            return '?'
 
 
 def cria_models_tipo_autor(app_config=None, verbosity=2, interactive=True,

@@ -200,80 +200,163 @@ class Parlamentar(models.Model):
         blank=True,
         null=True,
         on_delete=models.PROTECT,
-        verbose_name=_('Nível Instrução'))
+        verbose_name=_('Nível Instrução')
+    )
+
     situacao_militar = models.ForeignKey(
         SituacaoMilitar,
         blank=True,
         null=True,
         on_delete=models.PROTECT,
-        verbose_name=_('Situação Militar'))
+        verbose_name=_('Situação Militar')
+    )
+
     nome_completo = models.CharField(
-        max_length=50, verbose_name=_('Nome Completo'))
+        max_length=50,
+        verbose_name=_('Nome Completo')
+    )
+
     nome_parlamentar = models.CharField(
         max_length=50,
-        verbose_name=_('Nome Parlamentar'))
+        verbose_name=_('Nome Parlamentar')
+    )
+
     sexo = models.CharField(
-        max_length=1, verbose_name=_('Sexo'), choices=SEXO_CHOICE)
+        max_length=1,
+        verbose_name=_('Sexo'),
+        choices=SEXO_CHOICE
+    )
+
     data_nascimento = models.DateField(
-        blank=True, null=True, verbose_name=_('Data Nascimento'))
+        blank=True,
+        null=True,
+        verbose_name=_('Data Nascimento')
+    )
+
     cpf = models.CharField(
-        max_length=14, blank=True, verbose_name=_('C.P.F'))
+        max_length=14,
+        blank=True,
+        verbose_name=_('C.P.F')
+    )
+
     rg = models.CharField(
-        max_length=15, blank=True, verbose_name=_('R.G.'))
+        max_length=15,
+        blank=True,
+        verbose_name=_('R.G.')
+    )
+
     titulo_eleitor = models.CharField(
         max_length=15,
         blank=True,
-        verbose_name=_('Título de Eleitor'))
+        verbose_name=_('Título de Eleitor')
+    )
+
     numero_gab_parlamentar = models.CharField(
-        max_length=10, blank=True, verbose_name=_('Nº Gabinete'))
+        max_length=10,
+        blank=True,
+        verbose_name=_('Nº Gabinete')
+    )
+
     telefone = models.CharField(
-        max_length=50, blank=True, verbose_name=_('Telefone'))
+        max_length=50,
+        blank=True,
+        verbose_name=_('Telefone')
+    )
+
     fax = models.CharField(
-        max_length=50, blank=True, verbose_name=_('Fax'))
+        max_length=50,
+        blank=True,
+        verbose_name=_('Fax')
+    )
+
     endereco_residencia = models.CharField(
         max_length=100,
         blank=True,
-        verbose_name=_('Endereço Residencial'))
+        verbose_name=_('Endereço Residencial')
+    )
+
     municipio_residencia = models.CharField(
-        max_length=50, blank=True, verbose_name=_('Município'))
+        max_length=50,
+        blank=True,
+        verbose_name=_('Município')
+    )
+
     uf_residencia = models.CharField(
-        max_length=2, blank=True, choices=LISTA_DE_UFS, verbose_name=_('UF'))
+        max_length=2,
+        blank=True,
+        choices=LISTA_DE_UFS,
+        verbose_name=_('UF')
+    )
+
     cep_residencia = models.CharField(
-        max_length=9, blank=True, verbose_name=_('CEP'))
+        max_length=9,
+        blank=True,
+        verbose_name=_('CEP')
+    )
+
     telefone_residencia = models.CharField(
         max_length=50,
         blank=True,
-        verbose_name=_('Telefone Residencial'))
+        verbose_name=_('Telefone Residencial')
+    )
+
     fax_residencia = models.CharField(
         max_length=50,
         blank=True,
-        verbose_name=_('Fax Residencial'))
+        verbose_name=_('Fax Residencial')
+    )
+
     endereco_web = models.URLField(
-        max_length=100, blank=True, verbose_name=_('HomePage'))
+        max_length=100,
+        blank=True,
+        verbose_name=_('HomePage')
+    )
+
     profissao = models.CharField(
-        max_length=50, blank=True, verbose_name=_('Profissão'))
+        max_length=50,
+        blank=True,
+        verbose_name=_('Profissão')
+    )
+
     email = models.EmailField(
         max_length=100,
         blank=True,
-        verbose_name=_('E-mail'))
+        verbose_name=_('E-mail')
+    )
+
     locais_atuacao = models.CharField(
         max_length=100,
         blank=True,
-        verbose_name=_('Locais de Atuação'))
+        verbose_name=_('Locais de Atuação')
+    )
+
     ativo = models.BooleanField(
         db_index=True,
         default=False,
         choices=YES_NO_CHOICES,
-        verbose_name=_('Ativo na Casa?'))
+        verbose_name=_('Ativo na Casa?')
+    )
+
     biografia = models.TextField(
-        blank=True, verbose_name=_('Biografia'))
+        blank=True,
+        verbose_name=_('Biografia')
+    )
+
     fotografia = ImageCropField(
-        verbose_name=_('Fotografia'), upload_to=foto_upload_path,
-        validators=[restringe_tipos_de_arquivo_img], null=True, blank=True)
+        verbose_name=_('Fotografia'),
+        upload_to=foto_upload_path,
+        validators=[restringe_tipos_de_arquivo_img],
+        null=True,
+        blank=True
+    )
+
     cropping = ImageRatioField(
-        'fotografia', '128x128', verbose_name=_('Avatar'), size_warning=True,
-        help_text=_('A configuração do Avatar '
-                    'é possível após a atualização da fotografia.'))
+        'fotografia',
+        '128x128',
+        verbose_name=_('Avatar'),
+        size_warning=True,
+        help_text=_('A configuração do Avatar é possível após a atualização da fotografia.')
+    )
 
     # campo conceitual de reversão genérica para o model Autor que dá a
     # o meio possível de localização de tipos de autores.
@@ -285,7 +368,8 @@ class Parlamentar(models.Model):
             ('nome_completo', '__icontains'),
             ('nome_parlamentar', '__icontains'),
             ('filiacao__partido__sigla', '__icontains'),
-        ))
+        )
+    )
 
     class Meta:
         verbose_name = _('Parlamentar')
