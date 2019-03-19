@@ -413,6 +413,21 @@ class _TramitacaoAdministrativoViewSet(
         return qs
 
 
+class _AnexadoViewSet(
+        SaplSetViews['protocoloadm']['anexado'],
+        BusinessRulesNotImplementedMixin):
+
+    permission_classes = (
+        _DocumentoAdministrativoViewSet.DocumentoAdministrativoPermission, )
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if self.request.user.is_anonymous():
+            qs = qs.exclude(documento__restrito=True)
+        return qs
+
+
 class _SessaoPlenariaViewSet(
         SaplSetViews['sessao']['sessaoplenaria']):
 
