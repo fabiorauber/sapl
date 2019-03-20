@@ -448,5 +448,6 @@ SaplSetViews['parlamentares']['parlamentar'] = _ParlamentarViewSet
 SaplSetViews['protocoloadm']['documentoadministrativo'] = _DocumentoAdministrativoViewSet
 SaplSetViews['protocoloadm']['documentoacessorioadministrativo'] = _DocumentoAcessorioAdministrativoViewSet
 SaplSetViews['protocoloadm']['tramitacaoadministrativo'] = _TramitacaoAdministrativoViewSet
+SaplSetViews['protocoloadm']['anexado'] = _AnexadoViewSet
 
 SaplSetViews['sessao']['sessaoplenaria'] = _SessaoPlenariaViewSet
