@@ -15,8 +15,10 @@ def get(top_models):
         for obj in objs:
             if model == Autor:
                 kwargs = {'nome': obj.nome}
+                name = 'Autor'
             elif model == Parlamentar:
                 kwargs = {'nome_parlamentar': obj.nome_parlamentar}
+                name = 'Parlamentar'
             else:
                 return
 
@@ -26,9 +28,9 @@ def get(top_models):
                 multiplos_objs = [p.pk for p in pesquisa_obj]
                 multiplos_objs.sort()
 
-                lista = pks_objs.get(str(model))
+                lista = pks_objs.get(name)
                 if lista and multiplos_objs not in lista:
-                    pks_objs.update({str(model): lista.append(multiplos_objs)})
+                    pks_objs.update({name: lista.append(multiplos_objs)})
 
     return pks_objs
 
@@ -70,7 +72,13 @@ def transfer_congressman(models, pks_list):
 
 def purge(top_models, pks_dict):
     for model in top_models:
-        lista = pks_dict.get(str(model))
+        if model == Autor:
+            name = 'Autor'
+        elif model == Parlamentar:
+            name = 'Parlamentar'
+        else:
+            return
+        lista = pks_dict.get(name)
         if lista:
             for pks in lista:
                 for pk in pks[1:]:
@@ -86,11 +94,11 @@ def main():
 
     pks_dict = get(top_models)
 
-    author_list = pks_dict.get(str(Autor))
+    author_list = pks_dict.get('Autor')
     if author_list:
         transfer_author(author_list)
 
-    congressman_list = pks_dict.get(str(Parlamentar))
+    congressman_list = pks_dict.get('Parlamentar')
     if congressman_list:
         transfer_congressman(models, congressman_list)
 
