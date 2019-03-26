@@ -1,36 +1,39 @@
+import re
+
 from sapl.base.models import Autor
 from sapl.comissoes.models import Participacao
-from sapl.materia.models import Relatoria, UnidadeTramitacao, Autoria
+from sapl.materia.models import Relatoria, UnidadeTramitacao
 from sapl.parlamentares.models import Parlamentar, ComposicaoMesa, Dependente, Filiacao, Mandato
 from sapl.sessao.models import IntegranteMesa, JustificativaAusencia, Orador, OradorExpediente, PresencaOrdemDia, \
     RetiradaPauta, SessaoPlenariaPresenca, VotoParlamentar
 
 
-def get(top_models):
-    pks_objs = {'Autor': [], 'Parlamentar': []}
+def get_multiple(top_models):
+    pks_objs = {}
 
     for model in top_models:
+        model_name = re.findall(r'\w+', str(model))[-1]
+        pks_objs.update({model_name: []})
+
         objs = model.objects.all()
 
         for obj in objs:
-            if model == Autor:
+
+            if model_name == 'Autor':
                 kwargs = {'nome': obj.nome}
-                name = 'Autor'
-            elif model == Parlamentar:
+            elif model_name == 'Parlamentar':
                 kwargs = {'nome_parlamentar': obj.nome_parlamentar}
-                name = 'Parlamentar'
             else:
+                print('Model não reconhecida.')
                 return
 
             pesquisa_obj = model.objects.filter(**kwargs)
-
             if pesquisa_obj.count() > 1:
                 multiplos_objs = [p.pk for p in pesquisa_obj]
                 multiplos_objs.sort()
 
-                lista = pks_objs.get(name)
-                if lista and multiplos_objs not in lista:
-                    pks_objs.update({name: lista.append(multiplos_objs)})
+                if multiplos_objs not in pks_objs.get(model_name):
+                    pks_objs.get(model_name).append(multiplos_objs)
 
     return pks_objs
 
@@ -72,13 +75,9 @@ def transfer_congressman(models, pks_list):
 
 def purge(top_models, pks_dict):
     for model in top_models:
-        if model == Autor:
-            name = 'Autor'
-        elif model == Parlamentar:
-            name = 'Parlamentar'
-        else:
-            return
-        lista = pks_dict.get(name)
+        model_name = re.findall(r'\w+', str(model))[-1]
+
+        lista = pks_dict.get(model_name)
         if lista:
             for pks in lista:
                 for pk in pks[1:]:
@@ -92,7 +91,7 @@ def main():
               OradorExpediente, Participacao, PresencaOrdemDia, Relatoria, RetiradaPauta, SessaoPlenariaPresenca,
               UnidadeTramitacao, VotoParlamentar]
 
-    pks_dict = get(top_models)
+    pks_dict = get_multiple(top_models)
 
     author_list = pks_dict.get('Autor')
     if author_list:
