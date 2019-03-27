@@ -2035,17 +2035,23 @@ class DocumentoAcessorioEmLoteView(PermissionRequiredMixin, FilterView):
             messages.add_message(request, messages.ERROR, msg)
             return self.get(request, self.kwargs)
 
+        from sapl.settings import MEDIA_ROOT
+        with open(MEDIA_ROOT + '/' + request.FILES['arquivo'].name, 'wb') as destination:
+            for chunk in request.FILES['arquivo'].chunks():
+                destination.write(chunk)
+
         for materia_id in marcadas:
             doc = DocumentoAcessorio()
             doc.materia_id = materia_id
             doc.tipo = tipo
-            doc.arquivo = request.FILES['arquivo']
+            doc.arquivo.name = request.FILES['arquivo'].name
             doc.nome = request.POST['nome']
             doc.data = tz.localize(datetime.strptime(
                 request.POST['data'], "%d/%m/%Y"))
             doc.autor = request.POST['autor']
             doc.ementa = request.POST['ementa']
             doc.save()
+                
         msg = _('Documento(s) criado(s).')
         messages.add_message(request, messages.SUCCESS, msg)
         return self.get(request, self.kwargs)
